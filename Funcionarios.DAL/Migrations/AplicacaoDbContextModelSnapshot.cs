@@ -44,7 +44,7 @@ namespace Funcionarios.DAL.Migrations
                     b.HasIndex("LoginID")
                         .IsUnique();
 
-                    b.ToTable("Funcionario");
+                    b.ToTable("Funcionarios");
                 });
 
             modelBuilder.Entity("Funcionarios.Dominio.Login", b =>
@@ -64,7 +64,7 @@ namespace Funcionarios.DAL.Migrations
 
                     b.HasKey("LoginID");
 
-                    b.ToTable("Login");
+                    b.ToTable("Logins");
                 });
 
             modelBuilder.Entity("Funcionarios.Dominio.Funcionario", b =>

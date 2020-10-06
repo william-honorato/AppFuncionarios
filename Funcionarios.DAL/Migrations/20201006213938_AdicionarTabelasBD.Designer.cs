@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Funcionarios.DAL.Migrations
 {
     [DbContext(typeof(AplicacaoDbContext))]
-    [Migration("20201002221324_AdicionandoFuncionarios")]
-    partial class AdicionandoFuncionarios
+    [Migration("20201006213938_AdicionarTabelasBD")]
+    partial class AdicionarTabelasBD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,7 +46,7 @@ namespace Funcionarios.DAL.Migrations
                     b.HasIndex("LoginID")
                         .IsUnique();
 
-                    b.ToTable("Funcionario");
+                    b.ToTable("Funcionarios");
                 });
 
             modelBuilder.Entity("Funcionarios.Dominio.Login", b =>
@@ -66,7 +66,7 @@ namespace Funcionarios.DAL.Migrations
 
                     b.HasKey("LoginID");
 
-                    b.ToTable("Login");
+                    b.ToTable("Logins");
                 });
 
             modelBuilder.Entity("Funcionarios.Dominio.Funcionario", b =>

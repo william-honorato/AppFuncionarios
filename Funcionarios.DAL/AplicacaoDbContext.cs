@@ -10,6 +10,7 @@ namespace Funcionarios.DAL
     {
         public AplicacaoDbContext(DbContextOptions<AplicacaoDbContext> options) : base(options) {}
 
-        public DbSet<Funcionario> Funcionario { get; set; }
+        public DbSet<Login> Logins { get; set; }
+        public DbSet<Funcionario> Funcionarios { get; set; }
     }
 }

@@ -6,10 +6,10 @@ namespace Funcionarios.Dominio
 {
     public interface IRepository<TipoObjeto> where TipoObjeto : class
     {
-        TipoObjeto Salvar(TipoObjeto obj);
+        TipoObjeto Adicionar(TipoObjeto obj);
         TipoObjeto TrazerObjeto(int idObjeto);
         TipoObjeto Atualizar(TipoObjeto obj);
-        TipoObjeto Excluir(int idObjeto);
+        TipoObjeto Remover(int idObjeto);
         IList<TipoObjeto> TrazerTodos();
     }
 }

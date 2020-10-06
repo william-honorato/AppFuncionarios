@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Funcionarios.DAL.Migrations
 {
-    public partial class AdicionandoFuncionarios : Migration
+    public partial class AdicionarTabelasBD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Login",
+                name: "Logins",
                 columns: table => new
                 {
                     LoginID = table.Column<int>(nullable: false)
@@ -18,11 +18,11 @@ namespace Funcionarios.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Login", x => x.LoginID);
+                    table.PrimaryKey("PK_Logins", x => x.LoginID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Funcionario",
+                name: "Funcionarios",
                 columns: table => new
                 {
                     FuncionarioID = table.Column<int>(nullable: false)
@@ -34,18 +34,18 @@ namespace Funcionarios.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Funcionario", x => x.FuncionarioID);
+                    table.PrimaryKey("PK_Funcionarios", x => x.FuncionarioID);
                     table.ForeignKey(
-                        name: "FK_Funcionario_Login_LoginID",
+                        name: "FK_Funcionarios_Logins_LoginID",
                         column: x => x.LoginID,
-                        principalTable: "Login",
+                        principalTable: "Logins",
                         principalColumn: "LoginID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Funcionario_LoginID",
-                table: "Funcionario",
+                name: "IX_Funcionarios_LoginID",
+                table: "Funcionarios",
                 column: "LoginID",
                 unique: true);
         }
@@ -53,10 +53,10 @@ namespace Funcionarios.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Funcionario");
+                name: "Funcionarios");
 
             migrationBuilder.DropTable(
-                name: "Login");
+                name: "Logins");
         }
     }
 }
