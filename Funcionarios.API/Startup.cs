@@ -25,7 +25,7 @@ namespace Funcionarios.API
         {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AplicacaoDbContext>(options =>
-                                                      options.UseSqlServer(Configuration.GetConnectionString("DbAppFuncionarios")));
+                                                      options.UseSqlServer(Configuration.GetConnectionString("AppFuncionariosBD")));
             services.AddControllers();
 
             var chave = Configuration.GetValue<string>("ChaveToken");
@@ -61,6 +61,7 @@ namespace Funcionarios.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -8,21 +8,14 @@ using System.Text;
 
 namespace Funcionarios.API.Servicos
 {
-    public class ServicoToken
+    public static class ServicoToken
     {
-        private readonly IConfiguration config;
-
-        public ServicoToken(IConfiguration configuration) 
-        {
-            config = configuration;
-        }
-
-        public string GerarToken(Funcionario funcionario)
+        public static string GerarToken(Login login, IConfiguration config)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, funcionario.Login.Usuario)
+                    new Claim(ClaimTypes.Name, login.Usuario)
                 });
             var chave = config.GetValue<string>("ChaveToken");
             var key = Encoding.ASCII.GetBytes(chave);

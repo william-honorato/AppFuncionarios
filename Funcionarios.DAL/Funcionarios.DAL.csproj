@@ -5,6 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201006213938_AdicionarTabelasBD.cs" />
+    <Compile Remove="Migrations\20201006213938_AdicionarTabelasBD.Designer.cs" />
+    <Compile Remove="Migrations\20201007050125_AdicionarTabelasBD2.cs" />
+    <Compile Remove="Migrations\20201007050125_AdicionarTabelasBD2.Designer.cs" />
+    <Compile Remove="Migrations\20201007050409_AdicionarTabelasBD.cs" />
+    <Compile Remove="Migrations\20201007050409_AdicionarTabelasBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008042933_FuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008042933_FuncionariosBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008153943_CriarFuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008153943_CriarFuncionariosBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008163118_CriarFuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008163118_CriarFuncionariosBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008164301_CriarFuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008164301_CriarFuncionariosBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008165120_CriarFuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008165120_CriarFuncionariosBD.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
@@ -15,6 +34,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Funcionarios.Dominio\Funcionarios.Dominio.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
