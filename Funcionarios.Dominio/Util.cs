@@ -1,16 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Funcionarios.Dominio
 {
     public static class Util
     {
-        public static void ValidarTamanhoString(string valor, string nomeCampo, uint tamanhoMinimo, uint tamanhoMaximo)
+        public static readonly int TAMANHO_MINIMO_NOME = 5;
+        public static readonly int TAMANHO_MAXIMO_NOME = 150;
+
+        public static readonly int TAMANHO_MINIMO_USUARIO = 5;
+        public static readonly int TAMANHO_MAXIMO_USUARIO = 50;
+
+        public static readonly int TAMANHO_MINIMO_SENHA = 8;
+        public static readonly int TAMANHO_MAXIMO_SENHA = 50;
+
+        public static readonly int TAMANHO_MINIMO_EMAIL = 5;
+        public static readonly int TAMANHO_MAXIMO_EMAIL = 100;
+
+        public static void ValidarTamanhoString(string valor, string nomeCampo, int tamanhoMinimo, int tamanhoMaximo)
         {
-            if(valor.Length >= tamanhoMinimo &&
-               valor.Length <= tamanhoMaximo &&
-               !string.IsNullOrEmpty(valor))
+            int tamanho = valor.Length;
+            if ((tamanho < tamanhoMinimo) ||
+                (tamanho > tamanhoMaximo) ||
+                string.IsNullOrEmpty(valor))
             {
                 throw new ExcecaoDominio($"O campo {nomeCampo} deve ter entre {tamanhoMinimo} e {tamanhoMaximo} caracteres.");
             }

@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ClassesLogin\**" />
+    <EmbeddedResource Remove="ClassesLogin\**" />
+    <None Remove="ClassesLogin\**" />
+  </ItemGroup>
+
 </Project>

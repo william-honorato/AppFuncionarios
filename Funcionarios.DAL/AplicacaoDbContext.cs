@@ -11,35 +11,51 @@ namespace Funcionarios.DAL
     {
         public AplicacaoDbContext(DbContextOptions<AplicacaoDbContext> options) : base(options) {}
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Login>()
-                        .HasOne(b => b.Funcionario)
-                        .WithOne(i => i.Login)
-                        .HasForeignKey<Login>(b => b.FuncionarioID)
-                        .IsRequired(false);
-                            
-            //modelBuilder.ApplyConfiguration(new LoginMap());
-
-            base.OnModelCreating(modelBuilder);
-        }
-
-        public DbSet<Login> Logins { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
-    }
 
-    public class LoginMap : IEntityTypeConfiguration<Login>
-    {
-        public void Configure(EntityTypeBuilder<Login> builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.HasKey(l => l.LoginID);
+            #region Nome
+            builder.Entity<Funcionario>()
+                   .Property(b => b.Nome)
+                   .HasMaxLength(Util.TAMANHO_MAXIMO_NOME)
+                   .IsRequired(false);
+            #endregion
 
-            builder.OwnsOne(l => l.Funcionario, fun =>
-            {
-                fun.Property(f => f.Nome);
-                fun.Property(f => f.DataNascimento);
-                fun.Property(l => l.Email);
-            });
+            #region Data Nascimento
+            builder.Entity<Funcionario>()
+                   .Property(b => b.DataNascimento)
+                   .IsRequired(false);
+            #endregion
+
+            #region Email
+            builder.Entity<Funcionario>()
+                   .Property(b => b.Email)
+                   .HasMaxLength(Util.TAMANHO_MAXIMO_EMAIL)
+                   .IsRequired(false);
+
+            builder.Entity<Funcionario>()
+                   .HasIndex(f => f.Email)
+                   .IsUnique();
+            #endregion
+
+            #region Usuario
+            builder.Entity<Funcionario>()
+                .Property(b => b.Usuario)
+                .HasMaxLength(Util.TAMANHO_MAXIMO_USUARIO)
+                .IsRequired();
+
+            builder.Entity<Funcionario>()
+                .HasIndex(f => f.Usuario)
+                .IsUnique();
+            #endregion
+
+            #region Senha
+            builder.Entity<Funcionario>()
+                   .Property(b => b.Senha)
+                   .HasMaxLength(Util.TAMANHO_MAXIMO_SENHA)
+                   .IsRequired();
+            #endregion
         }
     }
 }

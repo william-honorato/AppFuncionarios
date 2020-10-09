@@ -10,12 +10,12 @@ namespace Funcionarios.API.Servicos
 {
     public static class ServicoToken
     {
-        public static string GerarToken(Login login, IConfiguration config)
+        public static string GerarToken(Funcionario funcionario, IConfiguration config)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, login.Usuario)
+                    new Claim(ClaimTypes.Name, funcionario.Usuario)
                 });
             var chave = config.GetValue<string>("ChaveToken");
             var key = Encoding.ASCII.GetBytes(chave);

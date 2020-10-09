@@ -21,6 +21,12 @@
     <Compile Remove="Migrations\20201008164301_CriarFuncionariosBD.Designer.cs" />
     <Compile Remove="Migrations\20201008165120_CriarFuncionariosBD.cs" />
     <Compile Remove="Migrations\20201008165120_CriarFuncionariosBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008181623_CriarFuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008181623_CriarFuncionariosBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008181740_CriarFuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008181740_CriarFuncionariosBD.Designer.cs" />
+    <Compile Remove="Migrations\20201008182017_CriarFuncionariosBD.cs" />
+    <Compile Remove="Migrations\20201008182017_CriarFuncionariosBD.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,10 +40,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Funcionarios.Dominio\Funcionarios.Dominio.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

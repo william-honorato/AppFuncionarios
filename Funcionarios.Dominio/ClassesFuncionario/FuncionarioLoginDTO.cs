@@ -4,21 +4,15 @@ using System.Text;
 
 namespace Funcionarios.Dominio.ClassesFuncionario
 {
-    public class FuncionarioDTO
+    public class FuncionarioLoginDTO
     {
-        public string Nome { get; set; }
-
-        public DateTime DataNascimento { get; set; }
-
-        public string Email { get; set; }
-
         public string Usuario { get; set; }
 
         public string Senha { get; set; }
 
         public Funcionario CriarFuncionario()
         {
-            var funcionario = new Funcionario(Nome, Senha, Email);
+            var funcionario = new Funcionario(Usuario, Senha);
             return funcionario;
         }
     }

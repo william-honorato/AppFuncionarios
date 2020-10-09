@@ -10,6 +10,7 @@ using Funcionarios.Dominio;
 using Microsoft.AspNetCore.Authorization;
 using Funcionarios.API.Servicos;
 using Microsoft.Extensions.Configuration;
+using Funcionarios.Dominio.ClassesFuncionario;
 
 namespace Funcionarios.API.Controllers
 {
@@ -17,6 +18,7 @@ namespace Funcionarios.API.Controllers
     [ApiController]
     public class FuncionariosController : ControllerBase
     {
+        private readonly int RETORNO_MAXIMO_FUNCIONARIOS = 100;
         private readonly AplicacaoDbContext _context;
 
         public FuncionariosController(AplicacaoDbContext context)
@@ -24,52 +26,60 @@ namespace Funcionarios.API.Controllers
             _context = context;
         }
 
+        // POST: api/Funcionarios/login
         [HttpPost("login")]
         [AllowAnonymous]
-        public ActionResult<dynamic> Autenticar([FromBody] Login user, [FromServices]IConfiguration configuration)
+        public ActionResult<dynamic> Autenticar([FromBody] FuncionarioLoginDTO user, [FromServices]IConfiguration configuration)
         {
-            var userLogin = _context.Logins
-                                    .AsNoTracking()
-                                    .Where(l => l.Usuario == user.Usuario &&
-                                                l.Senha   == user.Senha)
-                                    .FirstOrDefault();
+            Funcionario userLogin = null;
+            string token = "";
+            try
+            {
+                userLogin = ValidarAcessoUsuario(user);
 
-            if (userLogin == null)
-                return NotFound(new { Message = "Usuário ou/e senha inválida(s)" });
+                if (userLogin == null)
+                    return NotFound(new { Menssagem = "Usuário ou/e senha inválida(s)" });
 
-            var token = ServicoToken.GerarToken(userLogin, configuration);
+                token = ServicoToken.GerarToken(userLogin, configuration);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
+            }
 
+            userLogin.Senha = "";
             return new { usuario = userLogin, token = token, DataHora = DateTime.Now };
         }
 
         // GET: api/Funcionarios
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Funcionario>>> GetFuncionarios()
+        public async Task<ActionResult<IEnumerable<Funcionario>>> TrazerFuncionarios()
         {
-            return await _context.Funcionarios.ToListAsync();
+            var funcionarios = await _context.Funcionarios.Take(RETORNO_MAXIMO_FUNCIONARIOS).ToListAsync();
+            RemoverSenha(funcionarios);
+            return funcionarios;
         }
 
         // GET: api/Funcionarios/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Funcionario>> GetFuncionario(int id)
+        public async Task<ActionResult<Funcionario>> TrazerFuncionario(int id)
         {
             var funcionario = await _context.Funcionarios.FindAsync(id);
 
             if (funcionario == null) return NotFound();
 
+            funcionario.Senha = "";
             return funcionario;
         }
 
         // PUT: api/Funcionarios/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutFuncionario(int id, Funcionario funcionario)
+        public async Task<IActionResult> AtualizarFuncionario(int id, Funcionario funcionario)
         {
-            if (id != funcionario.FuncionarioID) return BadRequest();
+            if (id != funcionario.ID) return BadRequest();
 
             _context.Entry(funcionario).State = EntityState.Modified;
 
@@ -87,38 +97,89 @@ namespace Funcionarios.API.Controllers
         }
 
         // POST: api/Funcionarios
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        //[Authorize]
-        public async Task<ActionResult<Funcionario>> PostFuncionario(Funcionario funcionario)
+        [HttpPost("criar")]
+        public async Task<ActionResult<dynamic>> CriarFuncionario(FuncionarioLoginDTO funcionarioLogin)
         {
-            _context.Funcionarios.Add(funcionario);
-            await _context.SaveChangesAsync();
+            Funcionario funcionario = null;
 
-            return CreatedAtAction("GetFuncionario", new { id = funcionario.FuncionarioID }, funcionario);
+            try
+            {
+                funcionario = funcionarioLogin.CriarFuncionario();
+                _context.Funcionarios.Add(funcionario);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
+            }
+
+            funcionario.Senha = "";
+            return CreatedAtAction("TrazerFuncionario", new { id = funcionario.ID }, funcionario);
+        }
+
+        // POST: api/Funcionarios
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<Funcionario>> CriarFuncionario(Funcionario funcionario)
+        {
+            try
+            {
+                _context.Funcionarios.Add(funcionario);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
+            }
+
+            funcionario.Senha = "";
+            return CreatedAtAction("TrazerFuncionario", new { id = funcionario.ID }, funcionario);
         }
 
         // DELETE: api/Funcionarios/5
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<Funcionario>> DeleteFuncionario(int id)
+        public async Task<ActionResult<Funcionario>> DeletarFuncionario(int id)
         {
-            var funcionario = await _context.Funcionarios.FindAsync(id);
-            if (funcionario == null)
+            Funcionario funcionario;
+
+            try
             {
-                return NotFound();
+                funcionario = await _context.Funcionarios.FindAsync(id);
+                if (funcionario == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Funcionarios.Remove(funcionario);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
             }
 
-            _context.Funcionarios.Remove(funcionario);
-            await _context.SaveChangesAsync();
-
+            funcionario.Senha = "";
             return funcionario;
         }
 
         private bool FuncionarioExists(int id)
         {
-            return _context.Funcionarios.Any(e => e.FuncionarioID == id);
+            return _context.Funcionarios.Any(e => e.ID == id);
+        }
+
+        private Funcionario ValidarAcessoUsuario(FuncionarioLoginDTO user)
+        {
+            return _context.Funcionarios
+                           .AsNoTracking()
+                           .Where(l => l.Usuario == user.Usuario &&
+                                         l.Senha == user.Senha)
+                           .FirstOrDefault();
+        }
+
+        private void RemoverSenha(List<Funcionario> funcionarios)
+        {
+            funcionarios.ForEach(f => f.Senha = "");
         }
     }
 }
