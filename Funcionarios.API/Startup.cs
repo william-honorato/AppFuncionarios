@@ -23,6 +23,8 @@ namespace Funcionarios.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Permitir cors localhost
+            services.AddCors();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddDbContext<AplicacaoDbContext>(options =>
                                                       options.UseSqlServer(Configuration.GetConnectionString("AppFuncionariosBD")));
@@ -60,6 +62,9 @@ namespace Funcionarios.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //Permitir cors localhost
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();
