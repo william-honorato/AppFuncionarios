@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Funcionarios.API.Servicos;
 using Microsoft.Extensions.Configuration;
 using Funcionarios.Dominio.ClassesFuncionario;
+using Microsoft.IdentityModel.Tokens;
+using System.Net;
 
 namespace Funcionarios.API.Controllers
 {
@@ -20,6 +22,7 @@ namespace Funcionarios.API.Controllers
     {
         private readonly int RETORNO_MAXIMO_FUNCIONARIOS = 100;
         private readonly AplicacaoDbContext _context;
+        private static string MSG_ERRO_SERVIDOR = "Erro interno no servidor: ";
 
         public FuncionariosController(AplicacaoDbContext context)
         {
@@ -31,24 +34,25 @@ namespace Funcionarios.API.Controllers
         [AllowAnonymous]
         public ActionResult<dynamic> Autenticar([FromBody] FuncionarioLoginDTO user, [FromServices]IConfiguration configuration)
         {
-            Funcionario userLogin = null;
+            Funcionario funcionarioLogin = null;
             string token = "";
             try
             {
-                userLogin = ValidarAcessoUsuario(user);
+                funcionarioLogin = ValidarAcessoUsuario(user);
 
-                if (userLogin == null)
-                    return NotFound(new { Menssagem = "Usuário ou/e senha inválida(s)" });
+                if (funcionarioLogin == null)
+                    return StatusCode((int)HttpStatusCode.Unauthorized, "Usuário ou/e senha inválida(s)");
 
-                token = ServicoToken.GerarToken(userLogin, configuration);
+                token = ServicoToken.GerarToken(funcionarioLogin, configuration);
             }
             catch (Exception ex)
             {
-                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
+                var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
-            userLogin.Senha = "";
-            return new { usuario = userLogin, token = token, DataHora = DateTime.Now };
+            funcionarioLogin.Senha = "";
+            return new { funcionarioLogin = funcionarioLogin, token = token, dataHora = DateTime.Now };
         }
 
         // GET: api/Funcionarios
@@ -56,8 +60,18 @@ namespace Funcionarios.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Funcionario>>> TrazerFuncionarios()
         {
-            var funcionarios = await _context.Funcionarios.Take(RETORNO_MAXIMO_FUNCIONARIOS).ToListAsync();
-            RemoverSenha(funcionarios);
+            List<Funcionario> funcionarios;
+            try
+            {
+                funcionarios = await _context.Funcionarios.Take(RETORNO_MAXIMO_FUNCIONARIOS).ToListAsync();
+                RemoverSenha(funcionarios);
+            }
+            catch (Exception ex)
+            {
+                var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
+            }
+            
             return funcionarios;
         }
 
@@ -66,11 +80,20 @@ namespace Funcionarios.API.Controllers
         [Authorize]
         public async Task<ActionResult<Funcionario>> TrazerFuncionario(int id)
         {
-            var funcionario = await _context.Funcionarios.FindAsync(id);
+            Funcionario funcionario;
+            try
+            {
+                funcionario = await _context.Funcionarios.FindAsync(id);
 
-            if (funcionario == null) return NotFound();
+                if (funcionario == null) return NotFound();
 
-            funcionario.Senha = "";
+                funcionario.Senha = "";
+            }
+            catch (Exception ex)
+            {
+                var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
+            }
             return funcionario;
         }
 
@@ -79,21 +102,19 @@ namespace Funcionarios.API.Controllers
         [Authorize]
         public async Task<IActionResult> AtualizarFuncionario(int id, Funcionario funcionario)
         {
-            if (id != funcionario.ID) return BadRequest();
-
-            _context.Entry(funcionario).State = EntityState.Modified;
-
             try
             {
+                if (id != funcionario.ID) return BadRequest();
+                _context.Entry(funcionario).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!FuncionarioExists(id)) return NotFound();
-                else throw;
+                var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
-            return NoContent();
+            return StatusCode((int)HttpStatusCode.Accepted, "Atualizado com sucesso");
         }
 
         // POST: api/Funcionarios
@@ -110,7 +131,8 @@ namespace Funcionarios.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
+                var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
             funcionario.Senha = "";
@@ -129,7 +151,8 @@ namespace Funcionarios.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
+                var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
             funcionario.Senha = "";
@@ -156,14 +179,15 @@ namespace Funcionarios.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { Menssagem = ex.Message + " " + ex?.InnerException?.Message });
+                var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
+                return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
             funcionario.Senha = "";
             return funcionario;
         }
 
-        private bool FuncionarioExists(int id)
+        private bool FuncionarioExiste(int id)
         {
             return _context.Funcionarios.Any(e => e.ID == id);
         }
