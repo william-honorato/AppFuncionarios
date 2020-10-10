@@ -351,3 +351,52 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/Funcionarios.Web/appFuncionarios/dist
+/Funcionarios.Web/appFuncionarios/tmp
+/Funcionarios.Web/appFuncionarios/out-tsc
+# Only exists if Bazel was run
+/Funcionarios.Web/appFuncionarios/bazel-out
+
+# dependencies
+/Funcionarios.Web/appFuncionarios/node_modules
+
+# profiling files
+/Funcionarios.Web/appFuncionarios/chrome-profiler-events*.json
+/Funcionarios.Web/appFuncionarios/speed-measure-plugin*.json
+
+# IDEs and editors
+/Funcionarios.Web/appFuncionarios//.idea
+/Funcionarios.Web/appFuncionarios/.project
+/Funcionarios.Web/appFuncionarios/.classpath
+/Funcionarios.Web/appFuncionarios/.c9/
+/Funcionarios.Web/appFuncionarios/*.launch
+/Funcionarios.Web/appFuncionarios/.settings/
+/Funcionarios.Web/appFuncionarios/*.sublime-workspace
+
+# IDE - VSCode
+/Funcionarios.Web/appFuncionarios/.vscode/*
+/Funcionarios.Web/appFuncionarios/!.vscode/settings.json
+/Funcionarios.Web/appFuncionarios/!.vscode/tasks.json
+/Funcionarios.Web/appFuncionarios/!.vscode/launch.json
+/Funcionarios.Web/appFuncionarios/!.vscode/extensions.json
+/Funcionarios.Web/appFuncionarios/.history/*
+
+# misc
+/Funcionarios.Web/appFuncionarios/.sass-cache
+/Funcionarios.Web/appFuncionarios/connect.lock
+/Funcionarios.Web/appFuncionarios/coverage
+/Funcionarios.Web/appFuncionarios/libpeerconnection.log
+/Funcionarios.Web/appFuncionarios/npm-debug.log
+/Funcionarios.Web/appFuncionarios/yarn-error.log
+/Funcionarios.Web/appFuncionarios/testem.log
+/Funcionarios.Web/appFuncionarios/typings
+
+# System Files
+/Funcionarios.Web/appFuncionarios/.DS_Store
+/Funcionarios.Web/appFuncionarios/Thumbs.db
