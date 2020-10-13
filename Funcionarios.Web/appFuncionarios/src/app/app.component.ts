@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FuncionariosService } from './services/funcionarios.service';
-import { IFuncionario } from './models/funcionario';
-import { IUsuarioLogin } from './models/usuario-login';
-import { NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -11,13 +7,8 @@ import { NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap'
 })
 
 export class AppComponent {
-  title = 'appFuncionarios';
-  func = {} as IFuncionario;
-  resp = {} as IUsuarioLogin;
   
-  constructor(
-    private funcionariosService: FuncionariosService
-  ){}
+  constructor(){}
 
   ngOnInit() {}
 }

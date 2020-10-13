@@ -7,7 +7,8 @@
 						<h2>Gerenciar <b>Funcionários/Usuários</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<a href="#adicionarFuncionarioModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Adicionar</span></a>
+						<a href="#" class="btn btn-danger" (click)="sairApp()"><i class="fa fa-sign-out" aria-hidden="true"></i> <span>Sair</span></a>
+						<a href="#adicionarFuncionarioModal" class="btn btn-success" data-toggle="modal"><i	class="material-icons">&#xE147;</i> <span>Adicionar</span></a>
 					</div>
 				</div>
 			</div>
@@ -28,8 +29,11 @@
 						<td>{{ funcionario.dataNascimento | date: 'dd/MM/yyyy'}}</td>
 						<td>{{ funcionario.usuario }}</td>
 						<td>
-							<a href="#editarFuncionarioModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i></a>
-							<a href="#deletarFuncionarioModal" class="delete" (click)="setarFuncionarioModal(funcionario)" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Deletar">&#xE872;</i></a>
+							<a href="#editarFuncionarioModal" class="edit" data-toggle="modal"><i class="material-icons"
+									data-toggle="tooltip" title="Editar">&#xE254;</i></a>
+							<a href="#deletarFuncionarioModal" class="delete"
+								(click)="setarFuncionarioModal(funcionario)" data-toggle="modal"><i
+									class="material-icons" data-toggle="tooltip" title="Deletar">&#xE872;</i></a>
 						</td>
 					</tr>
 				</tbody>
@@ -47,107 +51,108 @@
 				</ul>
 			</div>
 		</div>
-	</div>        
+	</div>
 </div>
 
-<!-- Edit Modal HTML -->
+<!-- Modal Adicionar -->
 <div id="adicionarFuncionarioModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form>
-				<div class="modal-header">						
+			<form [formGroup]="formAdicionar" (ngSubmit)="adicionarFuncionario()">
+				<div class="modal-header">
 					<h4 class="modal-title">Adicionar Novo Funcionário</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
-				<div class="modal-body">					
+				<div class="modal-body">
 					<div class="form-group">
 						<label>Nome</label>
-						<input type="text" class="form-control" required>
+						<input type="text" formControlName="nome" class="form-control" required>
 					</div>
 					<div class="form-group">
 						<label>Email</label>
-						<input type="email" class="form-control" required>
+						<input type="email" formControlName="email" class="form-control">
 					</div>
 					<div class="form-group">
 						<label>Data de Nascimento</label>
-						<textarea class="form-control" required></textarea>
+						<input type="text" formControlName="dataNascimento" class="form-control">
 					</div>
 					<div class="form-group">
 						<label>Usuário</label>
-						<input type="text" class="form-control" required>
-                    </div>
-                    <div class="form-group">
+						<input type="text" formControlName="usuario" class="form-control" required>
+					</div>
+					<div class="form-group">
 						<label>Senha</label>
-						<input type="text" class="form-control" required>
-					</div>					
+						<input type="text" formControlName="senha" class="form-control" required>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-					<input type="submit" class="btn btn-success" value="Adicionar">
+					<input type="submit" class="btn btn-success" [disabled]="formAdicionar.invalid" value="Adicionar">
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
 
-<!-- Edit Modal HTML -->
-<div id="editEmployeeModal" class="modal fade">
+<!-- Modal Editar -->
+<div id="editarFuncionarioModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form>
-				<div class="modal-header">						
+			<form [formGroup]="formEditar" (ngSubmit)="editarFuncionario()">
+				<div class="modal-header">
 					<h4 class="modal-title">Editar Funcionário</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
-				<div class="modal-body">					
+				<div class="modal-body">
 					<div class="form-group">
 						<label>Nome</label>
-						<input type="text" class="form-control" required>
+						<input type="text" formControlName="nome" class="form-control" required>
 					</div>
 					<div class="form-group">
 						<label>Email</label>
-						<input type="email" class="form-control" required>
+						<input type="email" formControlName="email" class="form-control">
 					</div>
 					<div class="form-group">
 						<label>Data de Nascimento</label>
-						<textarea class="form-control" required></textarea>
+						<input type="text" formControlName="dataNascimento" class="form-control">
 					</div>
 					<div class="form-group">
 						<label>Usuário</label>
-						<input type="text" class="form-control" required>
-                    </div>
-                    <div class="form-group">
+						<input type="text" formControlName="usuario" class="form-control" required>
+					</div>
+					<div class="form-group">
 						<label>Senha</label>
-						<input type="text" class="form-control" required>
+						<input type="text" formControlName="senha" class="form-control" required>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-					<input type="submit" class="btn btn-info" value="Salvar">
+					<input type="submit" class="btn btn-info" [disabled]="formAdicionar.invalid" value="Atualizar">
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
 
-<!-- Delete Modal HTML -->
-<div id="deletarFuncionarioModal" class="modal fade">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form>
-				<div class="modal-header">						
-					<h4 class="modal-title">Deletar Funcionário</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">					
-					<p>Você deseja deletar esse registro?</p>
-					<p class="text-warning"><small>Essa ação não pode ser revertida.</small></p>
-				</div>
-				<div class="modal-footer">
-					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-					<input type="button" class="btn btn-danger" (click)="deletar()" data-dismiss="modal" value="Deletar">
-				</div>
-			</form>
+	<!-- Modal Deletar -->
+	<div id="deletarFuncionarioModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form>
+					<div class="modal-header">
+						<h4 class="modal-title">Deletar Funcionário</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">
+						<p>Você deseja deletar esse registro?</p>
+						<p class="text-warning"><small>Essa ação não pode ser revertida.</small></p>
+					</div>
+					<div class="modal-footer">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+						<input type="button" class="btn btn-danger" (click)="deletar()" data-dismiss="modal"
+							value="Deletar">
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
-</div>

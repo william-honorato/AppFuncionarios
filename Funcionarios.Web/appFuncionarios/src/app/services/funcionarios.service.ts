@@ -9,65 +9,70 @@ import { IUsuarioLogin } from '../models/usuario-login';
 export class FuncionariosService {
 
   private URL_BASE = "https://localhost:44310/api";
-  usuarioLogado = {} as IUsuarioLogin;
+  public usuarioLogado = {} as IUsuarioLogin;
 
-  // Headers
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  }
   constructor(private http: HttpClient) { 
-    const jsonUsuario = JSON.parse(sessionStorage.getItem("usuarioLogado"));
-    this.usuarioLogado.dataHora = new Date(jsonUsuario["dataHora"]);
-    this.usuarioLogado.token = jsonUsuario["token"];
-    this.usuarioLogado.funcionarioLogin = jsonUsuario["funcionarioLogin"];
+    const jsonString = sessionStorage.getItem("usuarioLogado");
 
-    console.error(this.usuarioLogado);
+    if(jsonString != null){
+      const jsonUsuario = JSON.parse(jsonString);
+      this.usuarioLogado.dataHora = new Date(jsonUsuario["dataHora"]);
+      this.usuarioLogado.token = jsonUsuario["token"];
+      this.usuarioLogado.funcionarioLogin = jsonUsuario["funcionarioLogin"];
+    }
   }
 
-  public fazerLogin(func: IFuncionario){
-    return this.http.post<IFuncionario>(`${this.URL_BASE}/funcionarios/login`, JSON.stringify(func), this.httpOptions);
+  pegarHeader(){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        Authorization: `Bearer ${this.usuarioLogado.token}`
+      })
+    };
+
+    return httpOptions;
   }
 
-  public criarUsuario(id: Number){
-    return this.http.get(`${this.URL_BASE}/funcionarios/${id}`);
+  public fazerLogin(funcionario: IFuncionario){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+    return this.http.post<IFuncionario>(`${this.URL_BASE}/funcionarios/login`, JSON.stringify(funcionario), httpOptions);
   }
 
-  //Metodos abaixo precisam estar autenticados
+  public criarUsuarioLogin(funcionario: IFuncionario){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+    return this.http.post<IFuncionario>(`${this.URL_BASE}/funcionarios/criar`, JSON.stringify(funcionario), httpOptions);
+  }
+
+  //Os metodos abaixo precisam estar autenticados
   public buscarFuncionario(id: Number){
     return this.http.get(`${this.URL_BASE}/funcionarios/${id}`);
   }
 
   public buscarFuncionarios(){
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        Authorization: `Bearer ${this.usuarioLogado.token}`
-      })
-    };
-
+    const httpOptions = this.pegarHeader();
     return this.http.get<IFuncionario[]>(`${this.URL_BASE}/funcionarios`, httpOptions);
   }
 
   public criarFuncionario(funcionario: IFuncionario){
-    return this.http.get(`${this.URL_BASE}/funcionarios`);
+    const httpOptions = this.pegarHeader();
+    return this.http.post<IFuncionario>(`${this.URL_BASE}/funcionarios`, JSON.stringify(funcionario), httpOptions);
   }
 
   public atualizarFuncionario(funcionario: IFuncionario){
-    return this.http.get(`${this.URL_BASE}/funcionarios`);
+    const httpOptions = this.pegarHeader();
+    return this.http.put<IFuncionario>(`${this.URL_BASE}/funcionarios`, JSON.stringify(funcionario), httpOptions);
   }
 
   public deletarFuncionario(funcionario: IFuncionario){
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        Authorization: `Bearer ${this.usuarioLogado.token}`
-      })
-    };
-
-    const urlAPI = `${this.URL_BASE}/funcionarios/${funcionario.id}`;
-    console.log("URL:", urlAPI);
-    return this.http.delete(urlAPI, httpOptions);
+    const httpOptions = this.pegarHeader();
+    return this.http.delete(`${this.URL_BASE}/funcionarios/${funcionario.id}`, httpOptions);
   }
 }

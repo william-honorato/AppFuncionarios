@@ -7,11 +7,8 @@
                     <img class="mb-4" src="../assets/employees.svg" alt="" width="72" height="72">
                     <h1 class="h3 mb-3 font-weight-normal">Faça login</h1>
 
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>Alerta:</strong> Usuário ou/e senha inválida(s)
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert" [hidden]="desabilitaMsgErroLogin">
+                        <strong>Alerta:</strong> {{ msgErroLogin }}
                     </div>
 
                     <label for="inputEmail" class="sr-only">Endereço de email</label>
@@ -39,26 +36,28 @@
 
 <!-- Modal -->
 <ng-template #content let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Cadastrar novo usuário</h5>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <label for="inputEmailCadastro" class="sr-only">Endereço de email</label>
-        <input type="email" id="inputEmailCadastro" class="form-control inputLogin" placeholder="Usuário" required
-            autofocus>
-        <label for="inputSenhaCad" class="sr-only">Senha</label>
-        <input type="password" id="inputSenhaCad" class="form-control inputLogin" placeholder="Senha" required>
-        <label for="inputConfirmarSenhaCad" class="sr-only">Senha</label>
-        <input type="password" id="inputConfirmarSenhaCad" class="form-control inputLogin" placeholder="Confirmar Senha"
-            required>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cross click')">Fechar</button>
-        <button type="button" class="btn btn-primary" (click)="cadastrar()">Cadastrar</button>
-    </div>
+    <form [formGroup]="formNovoUsuario" (ngSubmit)="adicionarNovoUsuario()">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Cadastrar novo usuário</h5>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <label for="inputEmailCadastro" class="sr-only">Endereço de email</label>
+            <input type="text" formControlName="usuario" class="form-control inputLogin" placeholder="Usuário" autofocus>
+
+            <label for="inputSenhaCad" class="sr-only">Senha</label>
+            <input type="password" formControlName="senha" class="form-control inputLogin" placeholder="Senha">
+
+            <label for="inputConfirmarSenhaCad" class="sr-only">Senha</label>
+            <input type="password" formControlName="confirmarSenha" class="form-control inputLogin" placeholder="Confirmar Senha">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cross click')">Fechar</button>
+            <button type="button" class="btn btn-primary" (click)="cadastrar(); open(load)" [disabled]="formNovoUsuario.invalid">Cadastrar</button>
+        </div>
+    </form>
 </ng-template>
 
 <!-- Modal Load -->
