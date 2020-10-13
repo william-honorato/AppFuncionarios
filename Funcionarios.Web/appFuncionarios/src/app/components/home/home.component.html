@@ -1,0 +1,153 @@
+<div class="container-xl">
+	<div class="table-responsive">
+		<div class="table-wrapper">
+			<div class="table-title">
+				<div class="row">
+					<div class="col-sm-6">
+						<h2>Gerenciar <b>Funcionários/Usuários</b></h2>
+					</div>
+					<div class="col-sm-6">
+						<a href="#adicionarFuncionarioModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Adicionar</span></a>
+					</div>
+				</div>
+			</div>
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Email</th>
+						<th>Data de Nascimento</th>
+						<th>Usuário</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let funcionario of funcionarios">
+						<td>{{ funcionario.nome }}</td>
+						<td>{{ funcionario.email }}</td>
+						<td>{{ funcionario.dataNascimento | date: 'dd/MM/yyyy'}}</td>
+						<td>{{ funcionario.usuario }}</td>
+						<td>
+							<a href="#editarFuncionarioModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Editar">&#xE254;</i></a>
+							<a href="#deletarFuncionarioModal" class="delete" (click)="setarFuncionarioModal(funcionario)" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Deletar">&#xE872;</i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="clearfix">
+				<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+				<ul class="pagination">
+					<li class="page-item disabled"><a href="#">Anterior</a></li>
+					<li class="page-item active"><a href="#" class="page-link">1</a></li>
+					<li class="page-item"><a href="#" class="page-link">2</a></li>
+					<li class="page-item"><a href="#" class="page-link">3</a></li>
+					<li class="page-item"><a href="#" class="page-link">4</a></li>
+					<li class="page-item"><a href="#" class="page-link">5</a></li>
+					<li class="page-item"><a href="#" class="page-link">Próximo</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>        
+</div>
+
+<!-- Edit Modal HTML -->
+<div id="adicionarFuncionarioModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Adicionar Novo Funcionário</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Nome</label>
+						<input type="text" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Email</label>
+						<input type="email" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Data de Nascimento</label>
+						<textarea class="form-control" required></textarea>
+					</div>
+					<div class="form-group">
+						<label>Usuário</label>
+						<input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+						<label>Senha</label>
+						<input type="text" class="form-control" required>
+					</div>					
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="submit" class="btn btn-success" value="Adicionar">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Edit Modal HTML -->
+<div id="editEmployeeModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Editar Funcionário</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Nome</label>
+						<input type="text" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Email</label>
+						<input type="email" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Data de Nascimento</label>
+						<textarea class="form-control" required></textarea>
+					</div>
+					<div class="form-group">
+						<label>Usuário</label>
+						<input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+						<label>Senha</label>
+						<input type="text" class="form-control" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="submit" class="btn btn-info" value="Salvar">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Delete Modal HTML -->
+<div id="deletarFuncionarioModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">						
+					<h4 class="modal-title">Deletar Funcionário</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<p>Você deseja deletar esse registro?</p>
+					<p class="text-warning"><small>Essa ação não pode ser revertida.</small></p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="button" class="btn btn-danger" (click)="deletar()" data-dismiss="modal" value="Deletar">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,6 +1,6 @@
 import { IFuncionario } from './funcionario';
 
-export interface IRespostaLogin {
+export interface IUsuarioLogin {
     dataHora: Date;
     token: string;
     funcionarioLogin: IFuncionario;

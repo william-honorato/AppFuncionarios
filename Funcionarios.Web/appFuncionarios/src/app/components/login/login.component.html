@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <div class="text-center">
+                <div class="form-signin">
+                    <img class="mb-4" src="../assets/employees.svg" alt="" width="72" height="72">
+                    <h1 class="h3 mb-3 font-weight-normal">Faça login</h1>
+
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Alerta:</strong> Usuário ou/e senha inválida(s)
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <label for="inputEmail" class="sr-only">Endereço de email</label>
+                    <input [(ngModel)]="login.usuario" type="email" id="inputEmail" class="form-control"
+                        placeholder="Usuário" required autofocus>
+                    <label for="inputPassword" class="sr-only">Senha</label>
+                    <input [(ngModel)]="login.senha" type="password" id="inputPassword" class="form-control"
+                        placeholder="Senha" required>
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" value="remember-me"> Lembrar de mim
+                        </label>
+                    </div>
+
+                    <button class="btn btn-lg btn-primary btn-block" (click)="fazerLogin(); open(load)">Login</button>
+                    <button class="btn btn-lg btn-success btn-block" (click)="open(content)">Cadastre-se</button>
+
+                    <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Cadastrar novo usuário</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <label for="inputEmailCadastro" class="sr-only">Endereço de email</label>
+        <input type="email" id="inputEmailCadastro" class="form-control inputLogin" placeholder="Usuário" required
+            autofocus>
+        <label for="inputSenhaCad" class="sr-only">Senha</label>
+        <input type="password" id="inputSenhaCad" class="form-control inputLogin" placeholder="Senha" required>
+        <label for="inputConfirmarSenhaCad" class="sr-only">Senha</label>
+        <input type="password" id="inputConfirmarSenhaCad" class="form-control inputLogin" placeholder="Confirmar Senha"
+            required>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cross click')">Fechar</button>
+        <button type="button" class="btn btn-primary" (click)="cadastrar()">Cadastrar</button>
+    </div>
+</ng-template>
+
+<!-- Modal Load -->
+<ng-template #load let-modal>
+    <div class="modal-header">
+    </div>
+    <div class="modal-body">
+        <h1>Aguarde ...</h1>
+    </div>
+    <div class="modal-footer">
+    </div>
+</ng-template>
