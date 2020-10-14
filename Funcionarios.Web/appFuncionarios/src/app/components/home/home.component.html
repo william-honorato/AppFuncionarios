@@ -7,8 +7,10 @@
 						<h2>Gerenciar <b>Funcionários/Usuários</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<a href="#" class="btn btn-danger" (click)="sairApp()"><i class="fa fa-sign-out" aria-hidden="true"></i> <span>Sair</span></a>
-						<a href="#adicionarFuncionarioModal" class="btn btn-success" data-toggle="modal"><i	class="material-icons">&#xE147;</i> <span>Adicionar</span></a>
+						<a href="#" class="btn btn-danger" (click)="sairApp()"><i class="fa fa-sign-out"
+								aria-hidden="true"></i> <span>Sair</span></a>
+						<a href="#adicionarFuncionarioModal" class="btn btn-success" data-toggle="modal"><i
+								class="material-icons">&#xE147;</i> <span>Adicionar</span></a>
 					</div>
 				</div>
 			</div>
@@ -29,8 +31,9 @@
 						<td>{{ funcionario.dataNascimento | date: 'dd/MM/yyyy'}}</td>
 						<td>{{ funcionario.usuario }}</td>
 						<td>
-							<a href="#editarFuncionarioModal" class="edit" data-toggle="modal"><i class="material-icons"
-									data-toggle="tooltip" title="Editar">&#xE254;</i></a>
+							<a href="#editarFuncionarioModal" class="edit" data-toggle="modal"
+								(click)="editarFuncionario(funcionario)"><i class="material-icons" data-toggle="tooltip"
+									title="Editar">&#xE254;</i></a>
 							<a href="#deletarFuncionarioModal" class="delete"
 								(click)="setarFuncionarioModal(funcionario)" data-toggle="modal"><i
 									class="material-icons" data-toggle="tooltip" title="Deletar">&#xE872;</i></a>
@@ -61,7 +64,7 @@
 			<form [formGroup]="formAdicionar" (ngSubmit)="adicionarFuncionario()">
 				<div class="modal-header">
 					<h4 class="modal-title">Adicionar Novo Funcionário</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<button type="button" #btnFecharModalAdicionar class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
@@ -74,7 +77,7 @@
 					</div>
 					<div class="form-group">
 						<label>Data de Nascimento</label>
-						<input type="text" formControlName="dataNascimento" class="form-control">
+						<input type="date" class="form-control" autocomplete=off formControlName="dataNascimento">
 					</div>
 					<div class="form-group">
 						<label>Usuário</label>
@@ -98,10 +101,10 @@
 <div id="editarFuncionarioModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form [formGroup]="formEditar" (ngSubmit)="editarFuncionario()">
+			<form [formGroup]="formEditar" (ngSubmit)="atualizarFuncionario()">
 				<div class="modal-header">
 					<h4 class="modal-title">Editar Funcionário</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<button type="button" #btnFecharModalEditar class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
@@ -114,7 +117,7 @@
 					</div>
 					<div class="form-group">
 						<label>Data de Nascimento</label>
-						<input type="text" formControlName="dataNascimento" class="form-control">
+						<input type="date" class="form-control" autocomplete=off formControlName="dataNascimento">
 					</div>
 					<div class="form-group">
 						<label>Usuário</label>
@@ -127,32 +130,32 @@
 				</div>
 				<div class="modal-footer">
 					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-					<input type="submit" class="btn btn-info" [disabled]="formAdicionar.invalid" value="Atualizar">
+					<input type="submit" class="btn btn-info" [disabled]="formEditar.invalid" value="Atualizar">
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
 
-	<!-- Modal Deletar -->
-	<div id="deletarFuncionarioModal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form>
-					<div class="modal-header">
-						<h4 class="modal-title">Deletar Funcionário</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">
-						<p>Você deseja deletar esse registro?</p>
-						<p class="text-warning"><small>Essa ação não pode ser revertida.</small></p>
-					</div>
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
-						<input type="button" class="btn btn-danger" (click)="deletar()" data-dismiss="modal"
-							value="Deletar">
-					</div>
-				</form>
-			</div>
+<!-- Modal Deletar -->
+<div id="deletarFuncionarioModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form>
+				<div class="modal-header">
+					<h4 class="modal-title">Deletar Funcionário</h4>
+					<button type="button" #btnFecharModalDeletar class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p>Você deseja deletar esse registro?</p>
+					<p class="text-warning"><small>Essa ação não pode ser revertida.</small></p>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancelar">
+					<input type="button" class="btn btn-danger" (click)="deletar()" data-dismiss="modal"
+						value="Deletar">
+				</div>
+			</form>
 		</div>
 	</div>
+</div>

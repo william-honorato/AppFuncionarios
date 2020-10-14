@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { IFuncionario } from 'src/app/models/funcionario';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { IUsuarioLogin } from 'src/app/models/usuario-login';
 import { FuncionariosService } from 'src/app/services/funcionarios.service';
 
 @Component({
@@ -15,11 +14,16 @@ import { FuncionariosService } from 'src/app/services/funcionarios.service';
 
 export class HomeComponent implements OnInit {
 
+  @ViewChild('btnFecharModalEditar') btnFecharModalEditar;
+  @ViewChild('btnFecharModalDeletar') btnFecharModalDeletar;
+  @ViewChild('btnFecharModalAdicionar') btnFecharModalAdicionar;
+
   closeResult = '';
   funcionarios = [] as IFuncionario[];
   funcionarioModal = {} as IFuncionario;
   formAdicionar: FormGroup;
   formEditar: FormGroup;
+  BirthDate: Date;
 
   constructor(private modalService: NgbModal,
     private config: NgbModalConfig,
@@ -35,16 +39,30 @@ export class HomeComponent implements OnInit {
 
   criarForm(f: IFuncionario): FormGroup {
     return new FormGroup({
+      id: new FormControl(f.id),
       nome: new FormControl(f.nome, [Validators.required, Validators.minLength(5), Validators.max(150)]),
       email: new FormControl(f.email, [Validators.email, Validators.max(100)]),
-      dataNascimento: new FormControl(f.dataNascimento, [Validators.minLength(10), Validators.max(100)]),
-      usuario: new FormControl(f.usuario, [Validators.required, Validators.minLength(5), Validators.max(100)]),
-      senha: new FormControl(f.senha, [Validators.required, Validators.minLength(8), Validators.max(100)])
+      dataNascimento: new FormControl(f.dataNascimento),
+      usuario: new FormControl(f.usuario, [Validators.required, Validators.minLength(5), Validators.max(50)]),
+      senha: new FormControl(f.senha, [Validators.required, Validators.minLength(8), Validators.max(50)])
     });
   }
 
   ngOnInit(): void {
     this.buscarFuncionarios();
+    this.BirthDate = new Date();
+  }
+
+  public fecharModalEditar() {
+    this.btnFecharModalEditar.nativeElement.click();
+  }
+
+  public fecharModalDeletar() {
+    this.btnFecharModalDeletar.nativeElement.click();
+  }
+
+  public fecharModalAdicionar() {
+    this.btnFecharModalAdicionar.nativeElement.click();
   }
 
   buscarFuncionarios(){
@@ -55,11 +73,10 @@ export class HomeComponent implements OnInit {
       },
       (erro) => {
         console.error(erro);
-        console.error(erro.status);
-        console.error(erro.error);
         this.modalService.dismissAll();
 
-        if(erro.status == 401){
+        const session = sessionStorage.getItem("usuarioLogado");
+        if(erro.status == 401 || session == null){
           sessionStorage.clear();
           this.router.navigate(['/login']);
         }
@@ -70,9 +87,11 @@ export class HomeComponent implements OnInit {
   deletar(){
     this.funcionariosService.deletarFuncionario(this.funcionarioModal)
                               .subscribe( data => {
+                                this.fecharModalDeletar();
                                 this.buscarFuncionarios();
                               },
                               (erro) => {
+                                this.fecharModalDeletar();
                                 this.buscarFuncionarios();
                               });
   }
@@ -82,21 +101,38 @@ export class HomeComponent implements OnInit {
   }
 
   adicionarFuncionario() {
+    this.formAdicionar.get('id').setValue(0); //API não aceita nulo
     this.funcionariosService.criarFuncionario(this.formAdicionar.value)
-    .subscribe((dados) =>{
-      console.log(dados);
-      this.buscarFuncionarios();
-    },
-    (erro) =>{
-      console.log(erro);
-      this.buscarFuncionarios();
-    });
+                            .subscribe((dados) =>{
+                              console.log(dados);
+                              this.fecharModalAdicionar();
+                              this.buscarFuncionarios();
+                            },
+                            (erro) =>{
+                              console.log(erro);
+                              this.fecharModalAdicionar();
+                              this.buscarFuncionarios();
+                            });
     
     this.formAdicionar.reset({} as IFuncionario);
   }
 
-  editarFuncionario(){
-    console.log(this.formEditar.value);
+  editarFuncionario(f: IFuncionario){
+    this.formEditar = this.criarForm(f);
+  }
+
+  atualizarFuncionario(){
+    this.funcionariosService.atualizarFuncionario(this.formEditar.value)
+                            .subscribe((dados) =>{
+                              console.log(dados);
+                              this.fecharModalEditar();
+                              this.buscarFuncionarios();
+                            },
+                            (erro) =>{
+                              console.log(erro);
+                              this.fecharModalEditar();
+                              this.buscarFuncionarios();
+                            });
   }
 
   sairApp(){

@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
                             (erro) => {
                               console.error(erro);
                               this.desabilitaMsgErroLogin = false;
-                              this.msgErroLogin = erro.error;
+                              this.msgErroLogin = typeof(erro.error) == "string" ? erro.error : "Erro ao se cadastrar";
                               this.modalService.dismissAll();
                             });
   }
@@ -85,7 +85,6 @@ export class LoginComponent implements OnInit {
         this.resposta.dataHora = dadosRetorno["dataHora"];
         this.resposta.token = dadosRetorno["token"];
         this.resposta.funcionarioLogin = dadosRetorno["funcionarioLogin"];
-        console.warn(this.resposta);
         sessionStorage.setItem('usuarioLogado', JSON.stringify(dadosRetorno));
         this.funcionariosService.usuarioLogado = this.resposta;
         this.router.navigate(['/home']);
@@ -93,7 +92,7 @@ export class LoginComponent implements OnInit {
       (erro) => {
         console.error(erro);
         this.desabilitaMsgErroLogin = false;
-        this.msgErroLogin = erro.error;
+        this.msgErroLogin = typeof(erro.error) == "string" ? erro.error : "Erro ao realizar login";
         this.modalService.dismissAll();
       }
     )

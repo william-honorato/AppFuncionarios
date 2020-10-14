@@ -68,7 +68,7 @@ export class FuncionariosService {
 
   public atualizarFuncionario(funcionario: IFuncionario){
     const httpOptions = this.pegarHeader();
-    return this.http.put<IFuncionario>(`${this.URL_BASE}/funcionarios`, JSON.stringify(funcionario), httpOptions);
+    return this.http.put<IFuncionario>(`${this.URL_BASE}/funcionarios/${funcionario.id}`, JSON.stringify(funcionario), httpOptions);
   }
 
   public deletarFuncionario(funcionario: IFuncionario){
