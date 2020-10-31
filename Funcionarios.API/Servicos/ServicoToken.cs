@@ -20,7 +20,7 @@ namespace Funcionarios.API.Servicos
             var chave = config.GetValue<string>("ChaveToken");
             var key = Encoding.ASCII.GetBytes(chave);
             var securityKey = new SymmetricSecurityKey(key);
-            var expires = DateTime.UtcNow.AddMinutes(5);
+            var expires = DateTime.UtcNow.AddHours(1);
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
             var tokenDesriptor = new SecurityTokenDescriptor

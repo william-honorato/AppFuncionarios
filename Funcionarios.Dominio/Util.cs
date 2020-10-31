@@ -36,7 +36,7 @@ namespace Funcionarios.Dominio
         {
             DateTime data;
             if (!DateTime.TryParse(valor, out data)) throw new ExcecaoDominio($"{nomeCampo} inválida");
-            if(data.CompareTo(DateTime.Now) < 0) throw new ExcecaoDominio($"{nomeCampo} tem que ser menor que a data atual");
+            if(data.CompareTo(DateTime.Now) > 0) throw new ExcecaoDominio($"{nomeCampo} tem que ser menor que a data atual");
 
             return data;
         }

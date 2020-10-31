@@ -26,15 +26,15 @@ namespace Funcionarios.Dominio
 
         public int ID { get; set; }
 
-        public string Nome { get; set; }
+        public string Usuario { get; private set; }
 
-        public DateTime? DataNascimento { get; set; }
+        public string Senha { get; private set; }
 
-        public string Email { get; set; }
+        public string Nome { get; private set; }
 
-        public string Usuario { get; set; }
+        public DateTime? DataNascimento { get; private set; }
 
-        public string Senha { get; set; }
+        public string Email { get; private set; }
 
         public void SetarUsuario(string usuario)
         {
@@ -60,15 +60,21 @@ namespace Funcionarios.Dominio
 
         public void SetarDataNascimento(string data)
         {
-            data = Util.LimparString(data);
-            DataNascimento = Util.ValidarData(data, "Data de Nascimento");
+            if (data != null)
+            {
+                data = Util.LimparString(data);
+                DataNascimento = Util.ValidarData(data, "Data de Nascimento");
+            }
         }
 
         public void SetarEmail(string email)
         {
-            email = Util.LimparString(email);
-            Util.ValidarTamanhoString(email, "Email", Util.TAMANHO_MINIMO_EMAIL, Util.TAMANHO_MAXIMO_EMAIL);
-            Email = email;
+            if (email != null)
+            {
+                email = Util.LimparString(email);
+                Util.ValidarTamanhoString(email, "Email", Util.TAMANHO_MINIMO_EMAIL, Util.TAMANHO_MAXIMO_EMAIL);
+                Email = email;
+            }
         }
 
         private bool ValidarSobrenome(string nome)

@@ -1,9 +1,5 @@
 ﻿using Funcionarios.Dominio;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Funcionarios.DAL
 {

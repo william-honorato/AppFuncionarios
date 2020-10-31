@@ -51,20 +51,29 @@ namespace Funcionarios.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
-            funcionarioLogin.Senha = "";
-            return new { funcionarioLogin = funcionarioLogin, token = token, dataHora = DateTime.Now };
+            return new { funcionarioLogin = FuncionarioRetornoDTO.Criar(funcionarioLogin), token = token, dataHora = DateTime.Now };
         }
 
         // GET: api/Funcionarios
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Funcionario>>> TrazerFuncionarios()
+        public async Task<ActionResult<IEnumerable<FuncionarioRetornoDTO>>> TrazerFuncionarios()
         {
-            List<Funcionario> funcionarios;
+            List<FuncionarioRetornoDTO> funcionarios;
+
             try
             {
-                funcionarios = await _context.Funcionarios.Take(RETORNO_MAXIMO_FUNCIONARIOS).ToListAsync();
-                RemoverSenha(funcionarios);
+                funcionarios = await (from f in _context.Funcionarios
+                                      select new FuncionarioRetornoDTO()
+                                      {
+                                            ID = f.ID,
+                                            Usuario = f.Usuario,
+                                            Nome = f.Nome,
+                                            DataNascimento = f.DataNascimento,
+                                            Email = f.Email
+                                      })
+                                      .Take(RETORNO_MAXIMO_FUNCIONARIOS)
+                                      .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -81,31 +90,32 @@ namespace Funcionarios.API.Controllers
         public async Task<ActionResult<Funcionario>> TrazerFuncionario(int id)
         {
             Funcionario funcionario;
+
             try
             {
                 funcionario = await _context.Funcionarios.FindAsync(id);
 
                 if (funcionario == null) return NotFound();
-
-                funcionario.Senha = "";
             }
             catch (Exception ex)
             {
                 var msgErro = $"{MSG_ERRO_SERVIDOR}{ex.Message} {ex?.InnerException?.Message}";
                 return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
+
             return funcionario;
         }
 
         // PUT: api/Funcionarios/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> AtualizarFuncionario(int id, Funcionario funcionario)
+        public async Task<IActionResult> AtualizarFuncionario(int id, FuncionarioDTO funcionarioDTO)
         {
             try
             {
-                if (id != funcionario.ID) return BadRequest();
-                _context.Entry(funcionario).State = EntityState.Modified;
+                if (id != funcionarioDTO.ID) return BadRequest();
+
+                _context.Entry(funcionarioDTO.CriarFuncionario()).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -117,8 +127,8 @@ namespace Funcionarios.API.Controllers
             return StatusCode((int)HttpStatusCode.Accepted, "Atualizado com sucesso");
         }
 
-        // POST: api/Funcionarios
-        [HttpPost("criar")]
+        // POST: api/Funcionarios/novo-usuario
+        [HttpPost("novo-usuario")]
         public async Task<ActionResult<dynamic>> CriarFuncionario(FuncionarioLoginDTO funcionarioLogin)
         {
             Funcionario funcionario = null;
@@ -135,17 +145,18 @@ namespace Funcionarios.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
-            funcionario.Senha = "";
             return CreatedAtAction("TrazerFuncionario", new { id = funcionario.ID }, funcionario);
         }
 
         // POST: api/Funcionarios
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Funcionario>> CriarFuncionario(Funcionario funcionario)
+        public async Task<ActionResult<Funcionario>> CriarFuncionario(FuncionarioDTO funcionarioDTO)
         {
+            Funcionario funcionario;
             try
             {
+                funcionario = funcionarioDTO.CriarFuncionario();
                 _context.Funcionarios.Add(funcionario);
                 await _context.SaveChangesAsync();
             }
@@ -155,7 +166,6 @@ namespace Funcionarios.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
-            funcionario.Senha = "";
             return CreatedAtAction("TrazerFuncionario", new { id = funcionario.ID }, funcionario);
         }
 
@@ -183,7 +193,6 @@ namespace Funcionarios.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
 
-            funcionario.Senha = "";
             return funcionario;
         }
 
@@ -203,7 +212,7 @@ namespace Funcionarios.API.Controllers
 
         private void RemoverSenha(List<Funcionario> funcionarios)
         {
-            funcionarios.ForEach(f => f.Senha = "");
+            funcionarios.ForEach(f => f.SetarSenha(""));
         }
     }
 }

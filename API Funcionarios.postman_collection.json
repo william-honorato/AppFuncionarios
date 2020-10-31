@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "2280870b-bfe7-4f71-a503-ba642fb6ba10",
+		"name": "API Funcionarios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"usuario\" : \"admin5\",\r\n    \"senha\" : \"admin123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/funcionarios/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"funcionarios",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Trazer funcionarios",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluNSIsIm5iZiI6MTYwMjU1NDMyNSwiZXhwIjoxNjAyNTU0NjI1LCJpYXQiOjE2MDI1NTQzMjV9.RG9WaLgDObfc1BDRhWxkWenBOUEmc8uZhSehPpIT_wQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44310/api/funcionarios",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"funcionarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Trazer funcionario",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmJmIjoxNjAyMjEwMzg5LCJleHAiOjE2MDIyMTA2ODksImlhdCI6MTYwMjIxMDM4OX0.HEcQ04818bmIwKawTo-_cVhoj3UQpj27vtwGzRGlaXY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44310/api/funcionarios/21",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"funcionarios",
+						"21"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar sem token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"usuario\" : \"silvio.santos2\",\r\n    \"senha\" : \"admin@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/funcionarios/criar",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"funcionarios",
+						"criar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluNSIsIm5iZiI6MTYwMjY4MTUxMiwiZXhwIjoxNjAyNjgxODEyLCJpYXQiOjE2MDI2ODE1MTJ9.l1fSfOmHnYPzVUbBV7Qurkn96C5D8eFdifIthAWZm_0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Administrador Oito\",\r\n    \"dataNascimento\": null,\r\n    \"email\": null,\r\n    \"usuario\": \"admin8\",\r\n    \"senha\": \"admin123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/funcionarios",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"funcionarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwibmJmIjoxNjAyMjEwMzg5LCJleHAiOjE2MDIyMTA2ODksImlhdCI6MTYwMjIxMDM4OX0.HEcQ04818bmIwKawTo-_cVhoj3UQpj27vtwGzRGlaXY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 23,\r\n    \"nome\": \"Silvio Santos\",\r\n    \"dataNascimento\": \"1900-01-01T00:00:00\",\r\n    \"email\": \"silvao@sbt.com.br\",\r\n    \"usuario\": \"silvio.santos2\",\r\n    \"senha\": \"silvio123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/funcionarios/23",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"funcionarios",
+						"23"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluNSIsIm5iZiI6MTYwMjU1NTE1MCwiZXhwIjoxNjAyNTU1NDUwLCJpYXQiOjE2MDI1NTUxNTB9.8pW2-x1AF5g10pob0qW02JPlDE2V6dSlgwXRYObrXEg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/funcionarios/7",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"funcionarios",
+						"7"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
