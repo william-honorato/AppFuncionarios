@@ -1,4 +1,4 @@
-﻿using Funcionarios.Dominio;
+﻿using Funcionarios.Dominio.Entidades.ClassesFuncionario;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;

@@ -1,4 +1,5 @@
 ﻿using Funcionarios.Dominio;
+using Funcionarios.Dominio.Entidades.ClassesFuncionario;
 using Microsoft.EntityFrameworkCore;
 
 namespace Funcionarios.DAL

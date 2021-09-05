@@ -1,4 +1,6 @@
 using Funcionarios.DAL;
+using Funcionarios.DAL.Repository;
+using Funcionarios.Dominio.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,6 +51,9 @@ namespace Funcionarios.API
                     ValidateAudience = false
                 };
             });
+
+            services.AddScoped<AplicacaoDbContext>();
+            services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
-namespace Funcionarios.Dominio
+namespace Funcionarios.Dominio.Entidades.ClassesFuncionario
 {
-    public class Funcionario
+    public class Funcionario : Entity
     {
         //Para o EF Core
-        private Funcionario() { }
+        public Funcionario() { }
 
         public Funcionario(string usuario, string senha)
         {
@@ -23,8 +21,6 @@ namespace Funcionarios.Dominio
             SetarDataNascimento(dataNascimento);
             SetarEmail(email);
         }
-
-        public int ID { get; set; }
 
         public string Usuario { get; private set; }
 

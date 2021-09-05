@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Funcionarios.DAL;
-using Funcionarios.Dominio;
 using Microsoft.AspNetCore.Authorization;
 using Funcionarios.API.Servicos;
 using Microsoft.Extensions.Configuration;
-using Funcionarios.Dominio.ClassesFuncionario;
-using Microsoft.IdentityModel.Tokens;
+using Funcionarios.Dominio.Entidades.ClassesFuncionario;
 using System.Net;
+using Funcionarios.Dominio.Interfaces;
 
 namespace Funcionarios.API.Controllers
 {
@@ -21,10 +19,10 @@ namespace Funcionarios.API.Controllers
     public class FuncionariosController : ControllerBase
     {
         private readonly int RETORNO_MAXIMO_FUNCIONARIOS = 100;
-        private readonly AplicacaoDbContext _context;
+        private readonly IFuncionarioRepository _context;
         private static string MSG_ERRO_SERVIDOR = "Erro interno no servidor: ";
 
-        public FuncionariosController(AplicacaoDbContext context)
+        public FuncionariosController(IFuncionarioRepository context)
         {
             _context = context;
         }
@@ -32,13 +30,13 @@ namespace Funcionarios.API.Controllers
         // POST: api/Funcionarios/login
         [HttpPost("login")]
         [AllowAnonymous]
-        public ActionResult<dynamic> Autenticar([FromBody] FuncionarioLoginDTO user, [FromServices]IConfiguration configuration)
+        public async Task<ActionResult<dynamic>> Autenticar([FromBody] FuncionarioLoginDTO user, [FromServices]IConfiguration configuration)
         {
             Funcionario funcionarioLogin = null;
             string token = "";
             try
             {
-                funcionarioLogin = ValidarAcessoUsuario(user);
+                funcionarioLogin = await _context.ValidarAcessoUsuario(user);
 
                 if (funcionarioLogin == null)
                     return StatusCode((int)HttpStatusCode.Unauthorized, "Usuário ou/e senha inválida(s)");
@@ -56,14 +54,18 @@ namespace Funcionarios.API.Controllers
 
         // GET: api/Funcionarios
         [HttpGet]
-        [Authorize]
+        //[Authorize]
+        //TODO: Remover comentário
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<FuncionarioRetornoDTO>>> TrazerFuncionarios()
         {
-            List<FuncionarioRetornoDTO> funcionarios;
+            List<FuncionarioRetornoDTO> funcionariosRetorno;
 
             try
             {
-                funcionarios = await (from f in _context.Funcionarios
+                var funcionarios = await _context.TrazerTodos(RETORNO_MAXIMO_FUNCIONARIOS);
+
+                funcionariosRetorno = (from f in funcionarios
                                       select new FuncionarioRetornoDTO()
                                       {
                                             ID = f.ID,
@@ -71,9 +73,7 @@ namespace Funcionarios.API.Controllers
                                             Nome = f.Nome,
                                             DataNascimento = f.DataNascimento,
                                             Email = f.Email
-                                      })
-                                      .Take(RETORNO_MAXIMO_FUNCIONARIOS)
-                                      .ToListAsync();
+                                      }).ToList();
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace Funcionarios.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, msgErro);
             }
             
-            return funcionarios;
+            return funcionariosRetorno;
         }
 
         // GET: api/Funcionarios/5
@@ -93,7 +93,7 @@ namespace Funcionarios.API.Controllers
 
             try
             {
-                funcionario = await _context.Funcionarios.FindAsync(id);
+                funcionario = await _context.BuscarPorId(id);
 
                 if (funcionario == null) return NotFound();
             }
@@ -115,8 +115,7 @@ namespace Funcionarios.API.Controllers
             {
                 if (id != funcionarioDTO.ID) return BadRequest();
 
-                _context.Entry(funcionarioDTO.CriarFuncionario()).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+                await _context.Atualizar(funcionarioDTO.CriarFuncionario());
             }
             catch (Exception ex)
             {
@@ -136,8 +135,7 @@ namespace Funcionarios.API.Controllers
             try
             {
                 funcionario = funcionarioLogin.CriarFuncionario();
-                _context.Funcionarios.Add(funcionario);
-                await _context.SaveChangesAsync();
+                await _context.Adicionar(funcionario);
             }
             catch (Exception ex)
             {
@@ -157,8 +155,7 @@ namespace Funcionarios.API.Controllers
             try
             {
                 funcionario = funcionarioDTO.CriarFuncionario();
-                _context.Funcionarios.Add(funcionario);
-                await _context.SaveChangesAsync();
+                await _context.Adicionar(funcionario);
             }
             catch (Exception ex)
             {
@@ -178,14 +175,13 @@ namespace Funcionarios.API.Controllers
 
             try
             {
-                funcionario = await _context.Funcionarios.FindAsync(id);
+                funcionario = await _context.BuscarPorId(id);
                 if (funcionario == null)
                 {
                     return NotFound();
                 }
 
-                _context.Funcionarios.Remove(funcionario);
-                await _context.SaveChangesAsync();
+                await _context.Remover(id);
             }
             catch (Exception ex)
             {
@@ -194,25 +190,6 @@ namespace Funcionarios.API.Controllers
             }
 
             return funcionario;
-        }
-
-        private bool FuncionarioExiste(int id)
-        {
-            return _context.Funcionarios.Any(e => e.ID == id);
-        }
-
-        private Funcionario ValidarAcessoUsuario(FuncionarioLoginDTO user)
-        {
-            return _context.Funcionarios
-                           .AsNoTracking()
-                           .Where(l => l.Usuario == user.Usuario &&
-                                         l.Senha == user.Senha)
-                           .FirstOrDefault();
-        }
-
-        private void RemoverSenha(List<Funcionario> funcionarios)
-        {
-            funcionarios.ForEach(f => f.SetarSenha(""));
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Funcionarios.Dominio.ClassesFuncionario
+﻿namespace Funcionarios.Dominio.Entidades.ClassesFuncionario
 {
     public class FuncionarioLoginDTO
     {
